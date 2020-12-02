@@ -19,5 +19,5 @@ class EmailUtils:
     def save_receipt(self, receipt):
         return None
 
-    def save_receipt(self, order):
+    def save_order(self, order):
         return None
