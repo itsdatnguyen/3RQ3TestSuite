@@ -25,9 +25,15 @@ class AccountManager:
     def send_password_reset_email(self, email):
         return None
 
+    def send_email_verification_email(self, account):
+        return None
+
     # actual implementation is expected to throw Exceptions
     def login(self, email, password):
         return None
 
     def get_account(self, account):
+        return None
+
+    def change_password(self, account, new_password):
         return None

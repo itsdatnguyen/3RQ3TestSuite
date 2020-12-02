@@ -27,7 +27,7 @@ def test_verify_account_email_is_invalid():
     assert manager.verify_email_address(
         'ton$gregexamplecom') == False, 'Email should not be valid'
 
-# 4.1.1.1 Existing accounts
+# 4.1.1.2 Existing accounts
 
 
 def test_verify_existing_account_with_non_existing_account():
@@ -37,7 +37,7 @@ def test_verify_existing_account_with_non_existing_account():
     assert manager.verify_email_does_not_exist_in_system(
         email) == True, 'Account does not exist within the system'
 
-# 4.1.1.1 Existing accounts
+# 4.1.1.2 Existing accounts
 
 
 def test_verify_existing_account_with_existing_account():
@@ -80,7 +80,20 @@ def test_default_account_is_locked():
     account = Account('test@gmail.com')
     assert account.is_locked == True, 'Account should be locked by default'
 
-# 4.1.3.4 Account activation
+# 4.1.3.1 Password verification link
+
+
+def test_password_verification_link_contains_correct_link():
+    manager = AccountManager()
+    account = Account('myemail@email.com')
+
+    manager.add_account(account)
+    email_details = manager.send_email_verification_email(account)
+
+    assert email_details != None and email_details.contains_correct_link() == True, 'Email verification email should contain a correct link'
+
+
+# 4.1.3.4 Account activation & 4.1.3.2 Link verification
 
 
 def test_account_activation_link_is_valid():
@@ -93,7 +106,7 @@ def test_account_activation_link_is_valid():
     assert manager.unlock_account(
         account.activation_code) == True, 'Account should successfully be unlocked'
 
-# 4.1.3.3 Account activation - Invalid link
+# 4.1.3.3 Account activation - Invalid link & 4.1.3.2 Link verification
 
 
 def test_account_activation_link_is_not_valid():
@@ -105,6 +118,20 @@ def test_account_activation_link_is_not_valid():
 
     assert manager.unlock_account(
         'invalidCode') == False, 'Account should not be unlocked'
+
+# 4.2 Password Reset
+
+
+def test_reset_password_is_successful():
+    account = Account('more@example.com')
+    account.password = 'Password354'
+    manager = AccountManager()
+
+    manager.add_account(account)
+    manager.change_password(account, 'newPassword454')
+
+    assert manager.change_password(
+        account, 'newPassword454') == True, 'Account password should be successfully changed'
 
 # 4.2.1.1 Email validation
 
@@ -118,7 +145,7 @@ def test_verify_password_reset_email_exists():
     assert manager.verify_email_does_not_exist_in_system(
         account.email_address) == True, 'Email should exist in the system'
 
-# 4.1.1.1 Email validation
+# 4.2.1.1 Email validation
 
 
 def test_verify_password_reset_email_does_not_exist():
@@ -147,7 +174,7 @@ def test_send_password_reset_email_is_unsuccessful():
     assert manager.send_password_reset_email(
         'fake_email@example.com') == False, 'Password reset email should not be sent'
 
-# 4.3.2.1 Account does not exist
+# 4.3.1 Account does not exist
 
 
 def test_login_account_does_not_exist_fails():
@@ -157,7 +184,7 @@ def test_login_account_does_not_exist_fails():
         assert manager.login(
             'fake@email.com', 'wowza'), 'Expected login to fail due to a non-existing account'
 
-# 4.3.2.2 Password is incorrect
+# 4.3.2 Password is incorrect
 
 
 def test_login_password_is_incorrect_fails():
@@ -173,7 +200,7 @@ def test_login_password_is_incorrect_fails():
         assert manager.login(
             account.email_address, 'wrongPassword2'), 'Expected login to fail due to incorrect password'
 
-# 4.3.2.3 Account is locked
+# 4.3.3 Account is locked
 
 
 def test_login_account_is_locked_fails():
@@ -189,7 +216,7 @@ def test_login_account_is_locked_fails():
         assert manager.login(
             account.email_address, account.password), 'Expected login to fail due to locked account'
 
-# 4.3.2.4 Account is banned
+# 4.3.4 Account is banned
 
 
 def test_login_account_is_banned_fails():
@@ -205,7 +232,7 @@ def test_login_account_is_banned_fails():
         assert manager.login(
             account.email_address, account.password), 'Expected login to fail due to banned account'
 
-# 4.3.2.5 Login success
+# 4.3.5 Login success
 
 
 def test_login_account_with_correct_information_success():
