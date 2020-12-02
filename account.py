@@ -5,3 +5,4 @@ class Account:
         self.activation_code = None
         self.password = None
         self.is_banned = False
+        self.address = None

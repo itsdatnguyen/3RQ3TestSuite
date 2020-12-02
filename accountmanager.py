@@ -29,4 +29,5 @@ class AccountManager:
     def login(self, email, password):
         return None
 
-
+    def get_account(self, account):
+        return None
