@@ -37,3 +37,6 @@ class AccountManager:
 
     def change_password(self, account, new_password):
         return None
+
+    def change_personal_information(self, account, first_name, last_name, email_address, address):
+        return None
