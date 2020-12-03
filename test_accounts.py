@@ -201,3 +201,106 @@ def test_login_account_with_correct_information_success():
 
     assert manager.login(account.email_address,
                          account.password) == True, 'Expected login to succeed'
+
+def test_kitchen_staff_view_all_accounts_success():
+    # 4.8.1 Account view access
+    manager = AccountManager()
+    account = Account('cool@man.com')
+
+    manager.add_account(account)
+
+    account_data = manager.view_all_accounts('KitchenStaff')
+    assert account_data[0].email_address == account.email_address, 'Expected to successfully retrieve all account data'
+
+def test_kitchen_manager_view_all_accounts_success():
+    # 4.8.1 Account view access
+    manager = AccountManager()
+    account = Account('yes@wow.com')
+
+    manager.add_account(account)
+
+    account_data = manager.view_all_accounts('KitchenManager')
+    assert account_data[0].email_address == account.email_address, 'Expected to successfully retrieve all account data'
+
+def test_customer_view_all_accounts_unsuccessful():
+    # 4.8.1 Account view access
+    manager = AccountManager()
+    account = Account('test@see.ca')
+
+    manager.add_account(account)
+
+    account_data = manager.view_all_accounts('Customer')
+    assert len(account_data) == 0, 'Expected to successfully retrieve all account data'
+
+def test_view_all_accounts_successfully_contains_data():
+    # 4.8.1.1 Viewable customer information
+    manager = AccountManager()
+    account = Account('test@see.ca')
+    account.first_name = 'Bob'
+    account.last_name = 'Tan'
+    account.home_address = '56 Robertson Road'
+    account.is_banned = False
+    account.is_locked = False
+
+    manager.add_account(account)
+
+    account_data = manager.view_all_accounts('KitchenManager')
+    retrieved_account = account_data[0]
+
+    assert retrieved_account.first_name == account.first_name, 'Expected first name to match'
+    assert retrieved_account.last_name == account.last_name, 'Expected last name to match'
+    assert retrieved_account.email_address == account.email_address, 'Expected email address to match'
+    assert retrieved_account.home_address == account.home_address, 'Expected home address to match'
+    assert retrieved_account.is_banned == account.is_banned, 'Expected banned status to match'
+    assert retrieved_account.is_locked == account.is_locked, 'Expected locked status to match'
+
+def test_account_ban_successful():
+    # 4.8.2 Account banning
+    manager = AccountManager()
+    account = Account('wow@example.ca')
+
+    manager.add_account(account)
+    manager.ban_account(account, True)
+
+    assert manager.is_account_banned(account) == True, 'Expected account to be banned'
+
+def test_account_unban_successful():
+    # 4.8.2 Account banning
+    manager = AccountManager()
+    account = Account('wow@wqwer.ca')
+    account.is_banned = True
+
+    manager.add_account(account)
+    manager.ban_account(account, False)
+
+    assert manager.is_account_banned(account) == False, 'Expected account to be not banned'
+
+def test_kitchen_manager_account_creation_successful():
+    # 4.9.1 Management Account Creation
+    manager = AccountManager()
+  
+    assert manager.admin_create_account('KitchenManager', 'newAdmin@hotmail.com', 'KitchenStaff') == True, 'Expected kitchen staff account to be created'
+
+def test_kitchen_staff_account_creation_successful():
+    # 4.9.1 Management Account Creation
+    manager = AccountManager()
+  
+    assert manager.admin_create_account('KitchenStaff', 'newAdmin@hotmail.com', 'KitchenStaff') == False, 'Expected kitchen staff account to not be created'
+
+def test_account_creation_with_kitchen_staff_role_successful():
+    # 4.9.1.1 Account Type
+    manager = AccountManager()
+  
+    assert manager.admin_create_account('KitchenManager', 'newAdmin@hotmail.com', 'KitchenStaff') == True, 'Expected kitchen staff account to be created'
+
+def test_account_creation_with_kitchen_manager_role_successful():
+    # 4.9.1.1 Account Type
+    manager = AccountManager()
+  
+    assert manager.admin_create_account('KitchenManager', 'newAdmin@hotmail.com', 'KitchenManager') == True, 'Expected kitchen staff manager to be created'
+
+def test_account_creation_with_customer_role_unsuccessful():
+    # 4.9.1.1 Account Type
+    manager = AccountManager()
+  
+    assert manager.admin_create_account('KitchenManager', 'newAdmin@hotmail.com', 'Customer') == False, 'Expected customer to not be created'

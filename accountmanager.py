@@ -1,3 +1,4 @@
+# represents an in-memory database of accounts
 class AccountManager:
 
     # 4.1.1 Required account information
@@ -36,4 +37,16 @@ class AccountManager:
         return None
 
     def change_password(self, account, new_password):
+        return None
+
+    def view_all_accounts(self, role):
+        return None
+
+    def ban_account(self, account, state):
+        return None
+
+    def is_account_banned(self, account):
+        return None
+
+    def admin_create_account(self, creator_role, email, role):
         return None

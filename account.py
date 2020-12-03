@@ -6,3 +6,6 @@ class Account:
         self.password = None
         self.is_banned = False
         self.address = None
+        self.first_name = None
+        self.last_name = None
+        self.home_address = None
